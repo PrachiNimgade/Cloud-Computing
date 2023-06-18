@@ -1,0 +1,239 @@
+KUBERNETES
+--------------------------
+--------------------------
+
+1.hostnamectl set-hostname master
+init 6
+2.hostnamectl set-hostname node1
+init 6
+3.hostnamectl set-hostname node2
+init 6
+
+4. su -
+5. yum install vim
+6. vim /etc/hosts
+7. 192.168.20.153(tab) master
+8. 192.168.20.154(tab) node1
+9. 192.168.20.155(tab) node2
+
+do this in all machine master node1 node2
+
+10. yum update -y
+     -------do this command in all machine
+
+11. yum install ssh* -y 
+        --------do this in all machine
+
+12. systemctl stop firewalld
+13. systemctl disable firewalld
+		-------do in all machine
+
+14. vim /etc/selinux/config 
+.....in all machine SELINUX=enforcing.. so remove enforcing and write disabled 
+ 
+15. vim /etc/fstab
+
+	in all machine--------swap line comment with #
+16. swapoff -a
+		......in all machine
+
+17. init 6  ---restart all machines
+
+18. ip a....check ip same or not in all machines
+19. ifup ens33 (if ip is not visible) in all machines
+
+20 open putty
+      192.168.20.153 press enter
+login as root.......in all machines
+
+21. modprobe overlay
+
+22. modprobe br_netfilter
+tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+.......copy in all putty master node1 node2
+
+23. sysctl --system
+
+24. tee /etc/yum.repos.d/kubernetes.repo<<EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+.............copy this in all putty master node1 node2
+
+25.yum clean all &&  yum -y makecache
+yum -y install epel-release git curl wget kubelet kubeadm kubectl --disableexcludes=kubernetes
+systemctl start kubelet
+systemctl enable kubelet
+ ......copy this in all machines of putty
+
+26. OS=CentOS_7
+VERSION=1.22
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+	......in all putty machine
+
+27. yum install cri-o -y ...in all putty
+28. systemctl daemon-reload
+    systemctl start crio
+    systemctl enable crio
+		.....in all putty machines
+
+run below command on Master Putty to create cluster
+---------------------------------------------------
+29. lsmod | grep br_netfilter
+30.kubeadm config images pull
+31. kubeadm init --pod-network-cidr=10.85.0.0/16 --upload-certs --control-plane-endpoint=master
+			....we get token after execute this command so copy that command create vim file and paste that command in vim file
+32. vim join-token
+33. kubeadm join master:6443 --token bz6jm3.vi326mtdxbfmk3be \
+        --discovery-token-ca-cert-hash sha256:e3568f9aeed675905  
+                           fd1de0b1d3fee13f7b312a907ef5c3e54f05b995216a47d
+34. cat join-token
+35. chmod u+x join-token
+36. ls
+37. scp join-token root@192.168.20.154:/root/ ...we use node1 ip add
+38.scp join-token root@192.168.20.155:/root/  ... we use node2 ip add
+39. ls 
+40. ./join-token .....in node2 putty
+41. kubectl get nodes
+42. mkdir -p $HOME/.kube
+[root@master ~]# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+cp: overwrite ‘/root/.kube/config’? y
+
+43. take snapshot of Master machine
+
+
+
+Task 1
+
+kubectl get nodes  
+	.........a command you use to retrieve information from a Kubernetes cluster on your local machine. 
+		This includes all the pods, deployments, services, and ReplicationControllers. 
+		You cannot use it to view resources from remote clusters, only containers on your machine
+kubectl get nodes -o wide
+kubectl get pods   ......
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -o wide
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATING DEPLOYMENT
+
+kubectl create deployment web1 --image=nginx --replicas=2
+		....here, web1 deplyement name and replicas means pods
+ 		we can create multiple container in on pod
+
+interview question:   
+
+kubectl get deployemnt
+kubectl get pods
+kubectl get pods -o wide
+
+Create sevices 
+kubectl get services
+kubectl expose deployment web1 --port=8080 --target-port=80 --name=demo
+				port=8080 is pod port  and name=demo is service name
+kubectl get service
+
+
+How to delete service
+
+kubectl delete service demo
+
+
+Again we want to create service then
+
+kubectl expose deployment web1 --type=NodePort --port=8080 --target-port=80 --name=demo
+					...here we are giving type of port we want eg NodePort
+		........we need to check with node1 machine ip with port 32490
+	ex. 192.168.20.154:32490
+
+kubectl scale --replicas=1 deployment/web1
+kubectl get pods
+
+
+
+
+
+Task 1
+create 1 deployment of httpd. create 3 services using above deployment.
+1 service running on clustur ip type
+2nd service running pn NodePort type
+3rd service running on LoadBalancer
+
+=============================================================================
+=============================================================================
+
+
+KUBERNETES WITH YAML
+====================
+
+apiVersion: apps/v1 == for deployment
+apiVersion: v1 == for service
+kind meand what you want to create exactly if you want to create deployment then
+write Deployment or Service
+
+metadata we mention name of deployemnt and label of deployment
+	name:
+	label
+
+spec:
+  replicas
+selector
+template
+
+template: pod ka specification templte ke andar likhte hai matlab konsi image hogi and port
+
+kubernetes docker hub ke hi use kiya jata hai
+
+services me target port change nhi kar sakte port hum change kar sakte hai.
+
+==========================================
+
+
+vim deployment.yaml
+vim service.yaml
+
+kubectl apply -f deployment.yaml ....to access both deployment and service file
+kubectl get deployment
+kubectl get pods
+
+kubectl apply -f service.yaml
+kubectl get service
+
+192.168.20.154: NodePort ip.....this is node1 ip
+
+
+TO DELETE 
+kubectl delete -f service.yaml......(first delete service)
+kubectl delete -f deployment.yaml....(then delete deployment)
+
+I want to create pod 
+
+template ke andar...spec ke andar
+			Nodename: node1
+
+
+
+
+
+Task:
+1.create a container of httpd and deploy in kubernetes worker nodes using yaml file.
+(replicas=2)
+2. Using above yaml file run the container on only node 2
+
+
+
+===================================================================
+===================================================================
+

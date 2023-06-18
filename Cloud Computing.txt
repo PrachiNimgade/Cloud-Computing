@@ -1,0 +1,1431 @@
+1.sudo apt install nfs-service.
+2.sudo vi /etc/exports
+3.sudo systemctl restart nfs
+4.showmount -e 192.168.10.5(ip address of machine)
+5.ls /vm-store/
+
+
+to start utility
+Node1
+1. sudo virt-manager
+2. sudo vi /etc/hosts
+3. sudo vi /etc/ssh/sshd-config
+-----PermitRootLogin- yes
+4.sudo systemctl restart ssh
+5. sudo ssh-keygen -t rsa
+6. sudo passwd -l root-------root acc enabling account
+7.sudo passwd----rot user password change
+
+transfer key from node1 to node2
+
+1.sudo ssh-copy-id -i /root/.ssh/id_rsa.pub root@node2
+2. sudo ssh root
+
+Node2
+1. sudo hostnamectl -h
+2.sudo hostnamectl sethostname
+3.sudo ssh-keygen -t rsa
+4.sudo passwd -l root-------root acc enabling account
+5.sudo passwd----root user password change
+6. sdo ssh node1
+7. sudo ssh copy-id -i /root/.ssh/id_rsa.pub root@node1
+8. sudo vet-manager
+
+
+in program
+sudo vi /etc/host
+12.0.0.1 local host
+
+PermitRootLogin yes
+PermitRootLogin without-password----enable(remove #)
+
+
+sudo vi/etc/ssg/sshd_config
+sudo systemctl restart ssh
+
+for enable ssh
+sudo apt install openssh-server
+
+
+
+
+
+
+
+
+
+
+
+Containers
+-----------------------
+1.lightweights execution units
+2.VM requires operating system
+3.when VM start, first the os boots and then the application starts. so it 
+takes some time to respond to client.There is delay.
+4. Containers do not required the complete OS
+5. When containers starts, no os booting required.
+Thus container execution is fast as compared to VM.
+6.  container runtime is a software that allows to create
+start, start, stop i.e. manage containers.
+docker, rkt, podman, containerd
+7. containers provide isolation.
+8. cotainers requires image, and image contains base os libraries function platform(middleware)
+(python php,java) and application.
+9. hub.docker.com-------docker repository--contain ready-made container image
+
+
+
+
+
+ubantu
+-----------------
+1.sudo vi /etc/netplan/01-netcfg.yaml
+2.sudo netplan apply
+3.ping www.google.com
+4.sudo apt indtall docker.io -y
+5.docker
+to start docker service------
+---------------
+6.sudo systemctl start docker
+7.sudo systemctl status docker
+8. sudo systemctl enable docker
+9. sudo docker ps-----(show running process)
+10. sudo docker ps -a--(show stopped process)
+11. sudo docker images-------(show local images)
+12. sudo docker pull centos
+13. sudo vi /etc/resolv.conf
+        -------
+14. docker run (image name)
+15. docker ps -a
+16.docker rm (container name/id)
+17 docker run -ti  (image name)
+18. ls
+17. mkdir hpcsa
+18. yum update -y
+19. exit
+20. docker ps -a
+
+to create new container
+1.docker run -ti --name c1 centos
+
+
+exit
+
+docker start c2
+docker stop c2
+docker start c2
+docker attach c2
+
+
+
+diff run and start: run means creating new container
+start means we start the existing container which is stop
+
+
+
+repositoryname: tag 
+http
+
+
+
+docker run -ti ubuntu....(automatically download images)
+docker pull httpd
+
+images are stored in layers
+
+docker images
+
+docker pull httpd:2.4.57
+
+
+Httpd Container Run
+
+ip a
+docker ps
+docker rm c1 c2 (images id of all container which in created)
+apt update -y
+apt install python2.7 -y(or any programming lang)
+docker inspect (container name)
+
+
+Run apache in container without ip
+ip -a
+docker run -ti --name web1 httpd
+docker rm u1 web1
+docker run --name web1 -p 8000:80 httpd(mapping port)
+
+
+
+
+
+presentation topic
+1. Application requirements for hosting on cloud
+2. what is multytenacy in cloud?
+
+
+
+
+------------------------------------------------------------------------------------------------
+
+
+
+-------------------------------------------------------------
+when we pull Ubuntu image and want to see our page in browser inside container
+-------------------------------------------------------------
+-------------------------------------------------------------
+docker image
+docker ps
+docker ps -a
+docker pull image name:
+docker rmi image name: latest
+docker stop container name
+docker rm container name
+cat
+apt-get install docker* -y---------install docker
+docker run --name u2 -ti ubantu
+docker start u2
+docker attach u2
+docker exec -ti container name /bin/bash
+
+
+apt update -y
+apt upgrage -y
+apt-get install apache2
+systemctl status apache2
+curl http://localhost
+apt-get install systemctl -y
+systemctl status apache2
+systemctl start apache2
+systemctl enable apache2
+curl http://localhost
+apt-get install curl -y
+curl http://localhost
+
+cd /var/www/html/
+ls
+rm -rf index.html
+vim index.html
+apt-get install vim -y if vi not available
+vim index.html
+------------write some text
+
+cat index.html
+curl http://localhost
+
+we can check by using ip address
+docker inspect container name
+------------------we ge ip add
+curl http://ip address
+------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
+
+
+
+docker attach container name 2
+curl http://ip address of container 2
+
+
+to run this all need 2 terminl
+
+
+
+
+
+ffor python...
+
+which python3
+apt-get install vim -y
+vim first-lab1.py
+......print("Hello, I am Prachi")
+:wq!
+
+cat first-lab1.py
+python3 first-lab1.py-----------execute file
+
+
+exit
+--------------------------------------------------
+-------------------------------------------------
+
+
+
+
+
+Docker with NGINX
+---------------------------------------
+----------------------------------------
+docker pull nginx(image name)
+
+docker images-----to show image installed or not
+docker run --name web1 nginx.....to direct create container and install images
+docker run --name web2 -d nginx..........to show logs
+docker logs web2
+
+to show webpage
+
+curl inspect web2
+..................note...for ex web1:172.17.0.2
+                                web2:172.17.0.3
+                                web3:172.17.0.4
+if we stop web2 then 
+
+curl http://ip address
+
+
+in browser.....type container ip
+....we get default webpage of nginx
+
+docker exec -ti web2 /bin/bash 
+
+cd /usr/share/nginx/html/....ngix      /usr/local/apache2/htdocs/......for httpd
+
+ls
+otherwise
+
+echo "Hi, web2 Cotainer Page!!!" > index.html
+echo "Hello, web2 Cotainer Page!!!" >> index.html
+
+
+port mapping
+when i dont wnat to run container ip i wnat to run my vm machine ip in google
+so my vm machine ip is 192.168.70.135:8000 (:8000 port attach with ip)
+
+
+docker run --name web3 -d -p 9000:80 nginx '
+docker ps
+
+
+http://192.168.70.135:9000...we will show the web3 webpage of nginx
+:
+
+docker exec -ti web3 /bin/bash
+cd /usr/share/nginx/html/
+ls
+echo "web3 page"> index.html
+
+
+---------------------------------------------------------
+---------------------------------------------------------
+11:52 PM 5/7/2023 Docker Volume/Volume Mapping concept
+here we use volume for nginx image
+we can use volume for ubuntu httpd as well just giving different path
+
+
+mkdir web4......aplication folder
+cd web4/
+vim index.html
+..........web4 page
+cat index.html
+ls
+pwd----we get path
+doker run --name web4 -d -p 9010:80 -v /root/web4/:/usr/share/nginx/html/ nginx
+docker ps
+192.168.70.135:9010
+
+-----------------------------------------------------------------
+------------------------------------------------------------------
+
+By using DOCKER FILE in container and images
+ 
+NGINX WITH DOCKER FILE
+---------------------------------
+
+mkdir web1
+cd web1
+vim index.html
+........write content
+cat index.html
+vim Dockerfile
+FROM nginx
+COPY . /usr/share/nginx/html/
+docker run --name web1 -p 9050:80 -d nginx
+
+-------------------------------------------
+
+HTTPD WITH DOCKER FILE
+Type 1
+-------------------------------------------
+mkdir web2
+cd web2/
+vim index.html
+cat index.html
+vim Dockerfile
+..................FROM httpd
+COPY . /usr/local/apache2/htdocs
+.............save 
+docker build -t myimage1:1.0 .
+docker run --name web2 -p 9051:80 -d httpd
+---------------------------------------------
+
+Type 2
+----------------------------------------------
+mkdir docker-httpd
+cd docker-httpd
+Vim Dockerfile
+...........FROM httpd:latest
+	   COPY index.html /usr/local/apache2/htdocs/
+           EXPOSE 8800......save
+vim index.html
+..........Hello prachi
+docker build -t my-httpd-image .
+docker run -d -p 8800:80 my-httpd-image
+
+search in same machine
+http://localhost:8800
+
+to show web page in browser
+ip address of machine with port number
+ex. 192.168.20.146:8800
+-----------------------------------------------
+
+PYTHON WITH DOCKERFILE IN UBUNTU
+-----------------------------------------------
+mkdire app1
+cd appvim 1/
+vim firstlab.py
+	......write program
+vim Dockerfile
+	.......FROM ubuntu
+		RUN apt update -y
+		RUN apt upgrade -y
+		RUN apt-get install python3 -y
+		RUN mkdir/app
+		COPY . /app/
+		CMD["python3", "/app/firstlab.py"]
+docker build -t myimage:1.0 .
+docker run --name cont1 -ti myimage:1.0
++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+------------------------------
+------------------------------
+FOR DOCKER REPOSITORY:
+-----------------------------
+-----------------------------
+create account in docker
+create repository
+.................................................
+docker login -u "username" -p "password" docker.io
+docker tag myimage:1.0 prachinimgade/hpcsalab1:1.0
+docker push prachinimgade/hpcsalab1:1.0
+
+docker save prachinimgade/hpcsalab1:1.0 > hpcsalab1.tar
+docker load < hpcsalab1.tar ......write this command in 1st machine to extract image 
+...............prachinimagde/hpcsalab
+
+
+
+optional command
+	----docker pull prachinimgade/baba
+	----docker pull prachinimgade/baba:1.0
+--------------------------------------------------------------------------
+---------------------------------------------------------------------------
+
+
+
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+VPC
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+what is vpc
+use of vpc
+Differnece between private subnet public subnet
+what is diff between network acl and security group
+what is diff between elastic ip and internet gateway and NAT gateway?
+----------------------------------------------------
+Private subnet: NAT Gateway->create-> Internet Access
+public subnet:- Inter gateway->Access Internet
+--------------------------------------------------------------------------
+
+VPC Task
+
+1.create a vpc (10.10.0.0/16) and make it public subnet
+create 1 amazon linux machine and attach above vpc. and host ustomize webpage.
+
+2. create vpc (192.0.0.0/16) create two subnets 1 is
+ 192.0.1.0/24 and 192.0.5.0/24 attach these subnets to
+2 ubuntu machines and try to ping each other.
+
+If do not ping other then create another machine of ubuntu with subnet 192.0.1.0/2 and try to
+ping machine 1 machine 3
+
+===============================================================================
+
+CREATING VPC         
+
+
+Step 1:
+	Go to VPC
+	Click on Create VPC
+		-VPC setting
+		-Select VPC Only
+		- Give name tag
+		-Provide IPV4 CIDR (e.g. 192.0.0.0/16)
+	Create VPC
+Step 2:
+	Click on Subnet
+		-Create Subnet
+		-Selec VPC ID(Our created VPC)
+		- Give Subnet name
+		- Select availabilty zone
+		-Provide IPV4 CIDR (e.g.192.0.1.0/24)
+	Create Subnet
+
+If we want to do with two subnet then do the same steps
+just change IPV4 CIDR (e.g. 192.0.5.0/24)
+
+Step 3:
+	Internet Gateway
+		- Create Internet gateway
+		- Give name
+		-Create IG
+		-Attach to VPC or Action->Attach to VPC
+		-select available VPC's
+		- Attach IG
+
+Step 4:
+	Route Table
+		-Select VPC --->Routes(below)
+		-Edit route
+		-Add route ---0.0.0/16---internet gateway
+		-save change
+
+For Attach VPC to instance we need to create EC2 Instance
+		Create Ec2 Instance
+		-Name
+		-select OS
+		-Instance Type
+		-Key pair
+		-N/w setting
+			-Provided created VPC 
+			-Auto-assign public ip --> enable
+			-Firewall setting ---Edit
+			- Security Group name
+			- Inbound security group rules
+			 	HTTP --> anywhere
+		Launch Instance.
+
+IF WE USE TWO SUBNET THEN WE NNED TO GO IN INSTNACE--> click
+	Go to Security
+	Click on security group
+	Edit inbound rules
+		Add rule --> All ICMP--> Anywhere
+
+And Ping with Private IP of Instance
+1) In Instance 1, ping private ip of instance2
+2) In Instance 2, ping private IP of Instance1
+
+-----------------------------------------------------------------------
+------------------------------------------------------------------------
+
+-----------------------------------
+GIT
+------------------------------------
+------------------------------------
+version control service and used in local system 
+
+
+1. which git
+......./usr/bin/git
+2. git version
+........we get version
+3. if git is not installed
+....apt-get install git
+
+
+
+
+to access remote repository
+------------------------------
+1. mkdir gitlab
+2. cd gitlab/
+3. pwd
+4. git clone https://github.com/PrachiNimgade/CloudComputing.git
+5. ls......we get clone of repository
+6. ls -ll
+7. cd CloudComputing (repo name)
+8. ls
+9. ls -la
+
+
+create some files
+touch file{1..6}
+
+
+to push file types
+
+git add -A............
+git add .      ............it is added to  staging area
+git add file1(filename)
+git add file1 file2
+git status
+git commit -m ""   .....(in double we need write msg)
+git status  ...current condition
+git add -A
+git commit -m "" 
+git config --global username
+git config --global user.email "nimgadeprachi@gmail.com"
+git commit -m ""
+git push -u origin master(branch name)
+.....username
+
+password :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
+
+touch file7
+git add -A
+git commit -m "second commit"
+git push -u origin master 
+
+------------------------------------------------
+git log .....we get all commit
+git branch 
+ ....we get branch name of git
+git branch branch name
+ ......it will add name in branch
+git checkout branch name....go to particular branch
+git restore --commit
+git remote -u urlname   ...set varialble on it
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+
+
+ANOTHER METHOD OF GIT TO PUSH FILE
+-----------------------------------
+
+mkdir day2git
+cd day2git
+git init
+ls -a
+touch index{1..2}.html
+git add -A
+git commit -m "FIRST COMMIT"
+git remote add origin https://github.com/PrachiNimgade/HPCSALAB
+git push -u origin master
+git pull origin master --allow-unrelated-histories
+....if we get error then copy from error ...git config pull.rebase false
+git pull origin master --allow-unrelated-histories
+control+x
+ls
+git push -u origin master
+	username: PrachiNimgade
+	Password: paste generated token
+
+------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
+jo working branch rehti hai uske aage * hota hai
+
+git branch
+
+  *master
+git branch dev ....creating branch
+    dev
+    *master
+If we want to switch branch 
+
+git chekout dev
+   give msg switched to branch dev
+git branch
+    *dev
+     master 
+ls
+
+
+something intersting
+
+git checkout master
+git branch a
+git branch b
+git branch c
+
+
+
+
+if we want file from another branch then go to that branch with command..
+git checkout (branch name )
+git merge (branch name of another branch)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+KUBERNETES
+--------------------------
+--------------------------
+
+1.hostnamectl set-hostname master
+init 6
+2.hostnamectl set-hostname node1
+init 6
+3.hostnamectl set-hostname node2
+init 6
+
+4. su -
+5. yum install vim
+6. vim /etc/hosts
+7. 192.168.20.153(tab) master
+8. 192.168.20.154(tab) node1
+9. 192.168.20.155(tab) node2
+
+do this in all machine master node1 node2
+
+10. yum update -y
+     -------do this command in all machine
+
+11. yum install ssh* -y 
+        --------do this in all machine
+
+12. systemctl stop firewalld
+13. systemctl disable firewalld
+		-------do in all machine
+
+14. vim /etc/selinux/config 
+.....in all machine SELINUX=enforcing.. so remove enforcing and write disabled 
+ 
+15. vim /etc/fstab
+
+	in all machine--------swap line comment with #
+16. swapoff -a
+		......in all machine
+
+17. init 6  ---restart all machines
+
+18. ip a....check ip same or not in all machines
+19. ifup ens33 (if ip is not visible) in all machines
+
+20 open putty
+      192.168.20.153 press enter
+login as root.......in all machines
+
+21. modprobe overlay
+
+22. modprobe br_netfilter
+tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+.......copy in all putty master node1 node2
+
+23. sysctl --system
+
+24. tee /etc/yum.repos.d/kubernetes.repo<<EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+.............copy this in all putty master node1 node2
+
+25.yum clean all &&  yum -y makecache
+yum -y install epel-release git curl wget kubelet kubeadm kubectl --disableexcludes=kubernetes
+systemctl start kubelet
+systemctl enable kubelet
+ ......copy this in all machines of putty
+
+26. OS=CentOS_7
+VERSION=1.22
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+	......in all putty machine
+
+27. yum install cri-o -y ...in all putty
+28. systemctl daemon-reload
+    systemctl start crio
+    systemctl enable crio
+		.....in all putty machines
+
+run below command on Master Putty to create cluster
+---------------------------------------------------
+29. lsmod | grep br_netfilter
+30.kubeadm config images pull
+31. kubeadm init --pod-network-cidr=10.85.0.0/16 --upload-certs --control-plane-endpoint=master
+			....we get token after execute this command so copy that command create vim file and paste that command in vim file
+32. vim join-token
+33. kubeadm join master:6443 --token bz6jm3.vi326mtdxbfmk3be \
+        --discovery-token-ca-cert-hash sha256:e3568f9aeed675905  
+                           fd1de0b1d3fee13f7b312a907ef5c3e54f05b995216a47d
+34. cat join-token
+35. chmod u+x join-token
+36. ls
+37. scp join-token root@192.168.20.154:/root/ ...we use node1 ip add
+38.scp join-token root@192.168.20.155:/root/  ... we use node2 ip add
+39. ls 
+40. ./join-token .....in node2 putty
+41. kubectl get nodes
+42. mkdir -p $HOME/.kube
+[root@master ~]# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+cp: overwrite ‘/root/.kube/config’? y
+
+43. take snapshot of Master machine
+
+
+
+Task 1
+
+kubectl get nodes  
+	.........a command you use to retrieve information from a Kubernetes cluster on your local machine. 
+		This includes all the pods, deployments, services, and ReplicationControllers. 
+		You cannot use it to view resources from remote clusters, only containers on your machine
+kubectl get nodes -o wide
+kubectl get pods   ......
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -o wide
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATING DEPLOYMENT
+
+kubectl create deployment web1 --image=nginx --replicas=2
+		....here, web1 deplyement name and replicas means pods
+ 		we can create multiple container in on pod
+
+interview question:   
+
+kubectl get deployemnt
+kubectl get pods
+kubectl get pods -o wide
+
+Create sevices 
+kubectl get services
+kubectl expose deployment web1 --port=8080 --target-port=80 --name=demo
+				port=8080 is pod port  and name=demo is service name
+kubectl get service
+
+
+How to delete service
+
+kubectl delete service demo
+
+
+Again we want to create service then
+
+kubectl expose deployment web1 --type=NodePort --port=8080 --target-port=80 --name=demo
+					...here we are giving type of port we want eg NodePort
+		........we need to check with node1 machine ip with port 32490
+	ex. 192.168.20.154:32490
+
+kubectl scale --replicas=1 deployment/web1
+kubectl get pods
+
+
+
+
+
+Task 1
+create 1 deployment of httpd. create 3 services using above deployment.
+1 service running on clustur ip type
+2nd service running pn NodePort type
+3rd service running on LoadBalancer
+
+=============================================================================
+=============================================================================
+
+
+KUBERNETES WITH YAML
+====================
+
+apiVersion: apps/v1 == for deployment
+apiVersion: v1 == for service
+kind meand what you want to create exactly if you want to create deployment then
+write Deployment or Service
+
+metadata we mention name of deployemnt and label of deployment
+	name:
+	label
+
+spec:
+  replicas
+selector
+template
+
+template: pod ka specification templte ke andar likhte hai matlab konsi image hogi and port
+
+kubernetes docker hub ke hi use kiya jata hai
+
+services me target port change nhi kar sakte port hum change kar sakte hai.
+
+==========================================
+
+
+vim deployment.yaml
+vim service.yaml
+
+kubectl apply -f deployment.yaml ....to access both deployment and service file
+kubectl get deployment
+kubectl get pods
+
+kubectl apply -f service.yaml
+kubectl get service
+
+192.168.20.154: NodePort ip.....this is node1 ip
+
+
+TO DELETE 
+kubectl delete -f service.yaml......(first delete service)
+kubectl delete -f deployment.yaml....(then delete deployment)
+
+I want to create pod 
+
+template ke andar...spec ke andar
+			Nodename: node1
+
+
+
+
+
+Task:
+1.create a container of httpd and deploy in kubernetes worker nodes using yaml file.
+(replicas=2)
+2. Using above yaml file run the container on only node 2
+
+
+
+===================================================================
+===================================================================
+
+
+LOAD BALANCER with VPC with two subnet
+
+create vpc 
+provide IP: 192.0.0.0/16
+create 2 subnet
+subnet1: 192.0.1.0/24
+subnet2; 192.0.5.0/24
+
+create internet gateway
+	Attach vpc in ig
+
+Routes tables
+	select instance
+	click on routes
+	edit routes
+	add routes : 0.0.0.0/0, internet gateway
+
+
+create 2 instances 
+	select created vpc
+	select subnet 1 for 1st instance
+	select subnet 2 for 1st instance
+
+install apache2 in both instance
+apt update -y
+apt upgrade -y
+apt install apache2 -y
+systemctl status apache2
+systemctl enable apache2 
+cd /var/www/html/
+mkdir test1
+cd test1/
+vim index.html 
+	....write content
+instance 2
+cd /var/www/html/
+mkdir new2
+cd new2/
+ls 
+
+
+whenver server  is not working 
+...systemctl start apache2 in of ec2 instance
+
+create target group1
+Instances
+target group name:
+seelct created vpc
+http1
+health check: /test1/
+next
+select instance1
+	 click on inbound as pending
+		create target group
+same for the target group2
+
+create load balancer
+	application load balancer
+		create
+	load balancer name
+		internet facing
+		ipv4
+Network mapping
+	select created vpc
+select two diff availability zone
+select security group which is same as instances
+default action
+	select tg1
+after doing all this
+	select loadbalancer 
+	listener
+	select given lb
+	action-> manage rule
+insert rule
++ add action 
+path
+/new2*
+in right side ->select forwarded to
+
+then come to lb copy DNS name...
+goto the browser paste that DNS name with /test1
+same for new2 with same dns of lb
+
+=================================================================
+
+
+S3....
+
+click on bucket
+creat bucket
+bucket name :
+aws region:
+choose bucket 
+ACL disabled....if we have ACL then select ACL enable
+block public access setting....untick
+
+acknowldeg
+
+click on create bucket
+		we can 100 bucket by default
+whenever create bucket need to gibve storage
+so one bucket storage is 0 to 5 TB
+
+now
+
+clcik on bucket 
+click on upload
+add files
+
+
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "file1",
+            "Effect": "Allow",
+            "Principal": "*",...........always give star
+            "Action": "s3:*",.......go to add action type s3 select all s3
+            "Resource": "arn:aws:s3:::23034127043/*".......here copy arn and give /*  or we can give file name with that extension
+        }
+    ]
+}
+
+go to properties of bucket file
+Static website hosting
+enable it
+
+create index.html and upload it into s3 bucket(bucket name-PRN) host in for publicly
+Name 
+PRN
+===================================================
+====================================================
+
+
+
+
+
+LAMBDA FUNCTION
+
+
+IAM roles For generate Logs
+create role
+select aws sservice
+select lambda
+in search bar type...exec
+	select	 +AWSLambdaBasicExecutionRole
+				next
+Role details
+Role name:
+create role
+
+IAM roles For generate SNS
+create role
+select aws sservice
+select lambda
+in search bar type...sns
+	select	 +AWSSNSFULLACCESS
+				next
+Role details
+Role name:
+create role
+
+
+
+then Create S3 bucket
+
+
+then go lambda
+create function
+select author from scratch
+give function name
+Runtime...select python3.7
+Change default execution role
+select Use an existing role....coz we already created iam roles
+Existing role
+ select cloudwatch role
+
+create function
+
+
+SNS
+
+go to topic
+create topic
+  select standard
+Name:
+create topic
+create subscription
+Protocol
+	select Email
+Endpoint
+	provide your email id
+create subscription
+then Go to your mail id
+check mail of aws
+     click on confirm
+refresh site it will make it as confirm
+
+
+Again go to LAmada
+
+click on Add Trigger
+dropdown
+select S3
+
+select your bucket
+
+acknowledge
+add
+
+
+Now click on Add Destination
+select Asynchronous invocation
+Condition
+select On success
+		save
+
+
+Go To S3
+ click on your bucket
+upload files
+
+
+======================================
+======================================
+
+
+JENKINS IN CICD PIPELINES
+============================
+============================
+
+In developer machine
+apt install git -y
+git --version
+
+create repository in github
+name jenkinsdocker
+4. git clone https://github.com/PrachiNimgade/CloudComputing.git
+5. ls......we get clone of repository
+6. ls -ll
+7. cd CloudComputing (repo name)
+8. ls
+9. ls -la
+
+echo "hi.....jenkins pipeline demo" > index.html
+or we can create vim index.html  file as well
+
+git add -A
+git commit -m "1.0"
+git commit -m "" 
+git config --global username
+git config --global user.email "nimgadeprachi@gmail.com"
+git commit -m ""
+git push -u origin master(branch name)
+.....username
+
+password :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
+
+
+In Jenkins machine
+
+apt update -y
+
+
+below lonks is from digitaloceal website
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+	
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+
+sudo apt update
+
+sudo apt install jenkins
+========================
+apt update -y
+apt install openjsk-11-jre headless -y
+apt install curl -y
+
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install jenkins
+
+systemctl status jenkins
+systemctl enable jenkins
+
+ip a
+ap of machine with port
+192.168.20.147:8080
+
+copy below command when we get dashboard
+cat /var/lib/jenkins/secrets/initialAdminPassword
+passowrd: 9d8ad06f559143e398d2d0dac59ae11e
+ 
+aftet instslling plugins
+
+username : jenkins
+pass : jenkins
+confirm: jenkins
+full name: jenkins
+email: jenkins@gmail.com
+		save and continue
+https://192.168.20.156:8080
+
+click on create a job
+
+Enter an item(job name with no space)
+	first-job
+click freestyle
+
+select gihub project (put url without .git)
+project url: https://github.com/PrachiNimgade/jenkinsdocker
+
+
+execute concurrent builds if necessary
+
+select git
+
+https://github.com/PrachiNimgade/jenkinsdocker.git
+
+branch to build
+*/master
+
+
+build triggers
+
+select build periodically
+
+give scheduler click on question mark
+ * * * * *
+
+		apply and save
+if it fail then install git
+
+apt install git docker* ssh -y
+
+then it will success
+
+then go to first-job (dropdown
+build now
+
+cd /var/lib/jenkins/workspace/first-job
+ls
+
+
+
+
+In Second project we create docker image and covert into tar file
+
+systemctl start jenkins
+cd /var/lib/jenkins/workspace/
+ls
+cd first-job
+
+vim Dockerfile
+	FROM nginx
+	COPY . /usr/share/nginx/html/ ....save
+
+ls
+
+
+new item
+second-job
+
+freestyle project 
+
+ok
+
+description:  creating dockerimage and .tar file for production server
+
+description ke niche wale option select nhi karne hai
+second and thirdjob hu create karte hai tab 
+
+Build trigger
+select after prjects are built ...for second job
+
+project to watch 
+  type existing project remove space after comma   i.e. first-job,
+
+select triggered only if build is stable
+
+nothing to select do in build env
+
+ 
+Build Step
+
+add build step
+select execute shell
+	write there
+		cd /var/lib/jenkins/workspace/first-job/
+docker build -t myweb:1.0 .
+docker save myweb:1.0 > mywe.tar
+
+first Apply..then Save
+
+
+if get error
+click on second job of #1
+we get console for to know error
+
+configure
+cd /var/lib/jenkins/workspace/first-job/
+sudo docker build -t myweb:1.0 .
+sudo docker save myweb:1.0 > myweb.tar
+
+again we get error
+
+go to console check error password
+
+come to terminal of jenkins
+vim /etc/sudoers
+	#user priveledge specification
+	root	ALL=(ALL:ALL) ALL
+	jenkins	ALL=	NOPASSWD:	ALL ....copy from google
+#allow members of group sudo to execute any command
+        %sudo ALL=(ALL:ALL) NOPASSWD: ALL
+			save
+giver space with tab
+
+cat etc/sudoers | grep jenkins 
+
+go to dashboard of jenkins
+check if running or not
+
+come to terminal
+
+ls
+
+...we get web.tar
+
+======================================
+
+In third prject we transfer the tar file using ssh
+
+new item : final-job
+freestyle
+ok
+
+description: transfer tar file to production server using ssh
+
+
+select after prjects are built ...for final job
+
+project to watch 
+  type existing project remove space after comma   i.e. second-job,
+
+
+select triggered only if build is stable
+
+nothing to select do in build env
+
+ 
+Build Step
+
+add build step
+select execute shell
+	write there
+cd /var/lib/jenkins/workspace/first-job/
+scp myweb.tar hpcsa@192.168.20.157:/home/hpcsa/ ........poduction server ip and user name
+ssh hpcsa@192.168.20.157 "docker load < myweb.tar"
+ssh hpcsa@192.168.20.157 "docker run --name web1 -d -p 9000:80 myweb:1.0"
+
+first Apply..then Save
+
+if it fail
+go to prodcution server
+
+go to terminal
+apt install ssh* -y
+
+if we get again error then go to dashboard 
+
+
+we do passwordless ssh in production server
+
+we do passwordless jenkins=machine2 and hpcsa=machine3
+
+come to jenkins machine
+
+su -s /bin/bash jenkins
+
+ssh-keygen
+
+press enter 3 times
+
+ssh-copy-id hpcsa@192.168.20.157
+          production server user and ip
+asking for passowrd: give password of production server
+
+ssh hpcsa@192.168.20.157
+
+exit
+exit
+
+if it get error
+
+so install docker in production server
+ apt install docker* -y
+systemctl start docker
+systemctl enable docker
+
+
+if get error
+
+then go to cofiguration of final job
+
+cd /var/lib/jenkins/workspace/first-job/
+scp myweb.tar hpcsa@192.168.20.157:/home/hpcsa/ ........poduction server ip and user name
+ssh hpcsa@192.168.20.157 "sudo docker load < myweb.tar"
+ssh hpcsa@192.168.20.157 "sudo docker run --name web1 -d -p 9000:80 myweb:1.0"
+
+
+
+again get errors 
+production server ke sudoes me jana
+vim /etc/sudoers
+#allow members of group sudo to execute any command
+%sudo ALL=(ALL:ALL) NOPASSWD: ALL
+			save
+giver space with tab
+
+if again get error
+
+cd /var/lib/jenkins/workspace/first-job/
+scp myweb.tar hpcsa@192.168.20.157:/home/hpcsa/ ........poduction server ip and user name
+ssh hpcsa@192.168.20.157 "sudo docker load < myweb.tar"
+ssh hpcsa@192.168.20.157 "sudo docker rm -f web1"
+ssh hpcsa@192.168.20.157 "sudo docker run --name web1 -d -p 9000:80 myweb:1.0"
+
+prometheus grafana for security
